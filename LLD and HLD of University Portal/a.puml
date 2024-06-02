@@ -1,0 +1,226 @@
+@startuml InstituteManagementSystem
+
+class Dashboard {
+    -icons: Icon[]
+    -news: News[]
+    -settings: Settings
+    +displayNews()
+    +updateSettings(Settings settings)
+    +addIcon(Icon icon)
+}
+
+class Settings {
+    -language: string
+    -country: string
+    -currency: string
+    -timeZone: string
+    -gradingSystemEnabled: Boolean
+    -smsConfig: SMSConfiguration
+    +changeLanguage(string language)
+    +setCountry(string country)
+    +enableGradingSystem(Boolean enable)
+}
+
+class SMSConfiguration {
+    -isEnabled: Boolean
+    -phoneNumber: string[]
+    +activateModule()
+    +setNumbers(string[] numbers)
+    +sendSMS(string message)
+}
+
+class Admission {
+    -studentID: string
+    -form: AdmissionForm
+    +createAdmissionForm(FormData data)
+    +addGuardian(Guardian guardian)
+}
+
+class AdmissionForm {
+    -personalInfo: PersonalInfo
+    -guardians: Guardian[]
+    -previousEducation: Education[]
+    -photo: File
+    +addPreviousEducation(Education education)
+    +uploadPhoto(File photo)
+}
+
+class Student {
+    -id: string
+    -personalInfo: PersonalInfo
+    -batch: Batch
+    -performance: Performance
+    +viewDetails()
+    +search(string criteria)
+}
+
+class Examination {
+    -type: string
+    -subjects: Subject[]
+    -reports: Report[]
+    +createExam(string type)
+    +generateReport()
+}
+
+class User {
+    -userID: string
+    -role: Role
+    -privileges: Privilege[]
+    +viewProfile()
+    +editPrivileges(Privilege[] privileges)
+}
+
+class Employee {
+    -employeeID: string
+    -personalInfo: PersonalInfo
+    -payrollInfo: Payroll
+    +admitEmployee(PersonalInfo info)
+    +exitEmployee()
+}
+
+class Payroll {
+    -salary: Decimal
+    -bonuses: Decimal
+    +updateSalary(Decimal salary)
+    +addBonus(Decimal bonus)
+}
+
+class AttendanceRecord {
+    -date: Date
+    -studentID: string
+    -status: string
+    -remarks: string
+    +markAttendance(string studentID, string status)
+    +addRemark(string remark)
+}
+
+class FinanceManager {
+    -fees: Fee[]
+    -expenses: Expense[]
+    -incomes: Income[]
+    +addFee(Fee fee)
+    +recordExpense(Expense expense)
+    +recordIncome(Income income)
+}
+class Fee {
+  - amount: Decimal
+  - dueDate: Date
+  - studentID: string
+
+  + payFee(): void
+  + setDueDate(date: Date): void
+}
+
+
+class MessagingSystem {
+    -messages: Message[]
+    +sendMessage(Message message)
+    +receiveMessage()
+}
+
+class Message {
+  - sender: User
+  - receiver: User
+  - content: string
+  - timeStamp: DateTime
+
+  + send(): void
+  + delete(): void
+}
+
+class TimeTable {
+    -schedule: ScheduleItem[]
+    +createTimeTable()
+    +editTimeTable(ScheduleItem item)
+    +deleteTimeTable()
+}
+
+class ScheduleItem {
+  - subject: Subject
+  - teacher: Employee
+  - timeSlot: TimeSlot
+
+  + assignSubject(subject: Subject): void
+  + assignTeacher(teacher: Employee): void
+}
+
+class NewsManager {
+    -newsItems: NewsItem[]
+    +createNews(NewsItem news)
+    +editNews(NewsItem news)
+    +deleteNews(NewsItem news)
+}
+
+class NewsItem {
+  - title: string
+  - content: string
+  - publishedDate: Date
+  - comments: Comment[]
+
+  + addComment(comment: Comment): void
+  + deleteComment(comment: Comment): void
+}
+
+
+class Role {
+    -roleName: string
+    -privileges: Privilege[]
+    +addPrivilege(Privilege privilege)
+}
+
+class Fee {
+    -amount: Decimal
+    -dueDate: Date
+    -studentID: string
+    +payFee()
+    +setDueDate(Date date)
+}
+class Income {
+    - category : string
+    - payer : string
+    - paymentMethod : string
+    - isRecurring : boolean
+
+    + getPayer() : string
+    + setPayer(payer : string) : void
+    + getPaymentMethod() : string
+    + setPaymentMethod(paymentMethod : string) : void
+    + isRecurring() : boolean
+    + setRecurring(isRecurring : boolean) : void
+}
+
+class Expense {
+    - category : string
+    - payer : string
+    - paymentMethod : string
+    - isRecurring : boolean
+
+    + getPayer() : string
+    + setPayer(payer : string) : void
+    + getPaymentMethod() : string
+    + setPaymentMethod(paymentMethod : string) : void
+    + isRecurring() : boolean
+    + setRecurring(isRecurring : boolean) : void
+}
+
+class Privilege {
+    -name: string
+    -description: string
+}
+
+' Relationships
+Dashboard "1" -- "1" Settings
+Dashboard "1" -- "*" Icon
+Dashboard "1" -- "*" News
+Admission "1" -- "1" AdmissionForm
+AdmissionForm "1" -- "*" Guardian
+AdmissionForm "1" -- "*" Education
+User "1" -- "1" Role
+Employee "1" -- "1" Payroll
+FinanceManager "1" -- "*" Fee
+FinanceManager "1" -- "*" Expense
+FinanceManager "1" -- "*" Income
+TimeTable "1" -- "*" ScheduleItem
+NewsManager "1" -- "*" NewsItem
+
+@enduml

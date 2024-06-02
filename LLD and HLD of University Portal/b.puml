@@ -1,0 +1,780 @@
+@startuml InstituteManagementSystem
+
+class Dashboard {
+    + displayDashboard(): void
+    + displayLatestNews(): void
+    + DisplayInstituteDetails(): void 
+    + setLanguage(language: string): void
+    + setCountry(country: string): void
+    + setCurrency(currency: string): void
+    + setTimeZone(timeZone: string): void
+    + enableGradingSystem(enable: boolean): void
+    + enableAutomaticUserIDGeneration(enable: boolean): void
+    + manageCourses(): void
+    + manageBatches(): void
+    + transferBatch(student: Student, fromBatch: string, toBatch: string): void
+    + graduateStudent(student: Student): void
+    + manageSubjects(): void
+    + addElectiveSubject(subject: Subject): void
+    + addCustomFieldForAdmissionForm(field: AdmissionFormField): void
+    + activateSMSModule(): void
+    + setSMSConfiguration(config: SMSConfiguration): void
+    + sendSMSToSingleUser(user: User, message: string): void
+    + sendSMSToGroupUsers(users: List<User>, message: string): void
+    + sendSMSToAllUsers(message: string): void
+    + manageStudentCategories(): void
+}
+
+class EducationInstitute {
+  - name: String
+  - address: String
+  - phoneNumber: String
+
+  + getName(): String
+  + setName(name: String): void
+  + getAddress(): String
+  + setAddress(address: String): void
+  + getPhoneNumber(): String
+  + setPhoneNumber(phoneNumber: String): void
+}
+
+class AdmissionFormField {
+    - name: string
+    - type: string
+    - required: booleanContact
+    + AdmissionFormField(name: string, type: string, required: boolean)
+    + getName(): string
+    + getType(): string
+    + isRequired(): boolean
+}
+
+' class SMSConfiguration {
+'     - senderID: string
+'     - apiKey: string
+'     - apiSecret: string
+'     - countryCode: string
+'     + SMSConfiguration(senderID: string, apiKey: string, apiSecret: string, countryCode: string)
+'     + getSenderID(): string
+'     + getAPIKey(): string
+'     + getAPISecret(): string
+'     + getCountryCode(): string
+' }
+
+
+
+
+
+class Settings {
+    -language: string
+    -country: string
+    -currency: string
+    -timeZone: string
+    -gradingSystemEnabled: Boolean
+    -smsConfig: SMSConfiguration
+    +changeLanguage(string language)
+    +setCountry(string country)
+    +enableGradingSystem(Boolean enable)
+}
+
+class SMSConfiguration {
+    -isEnabled: Boolean
+    -phoneNumber: string[]
+    +activateModule()
+    +setNumbers(string[] numbers)
+    +sendSMS(string message)
+}
+
+class Student {
+    - id: int
+    - name: string
+    - batch: string
+    - status: string
+    - admissionForm: AdmissionForm
+    - guardians: List<Guardian>
+    - emergencyContacts: List<Contact>
+    - previousEducation: List<EducationDetail>
+    - photo: Image
+
+    + Student(id: int, name: string, batch: string, status: string)
+    + getId(): int
+    + getName(): string
+    + getBatch(): string
+    + getStatus(): string
+    + setStatus(status: string): void
+    + getAdmissionForm(): AdmissionForm
+    + setAdmissionForm(admissionForm: AdmissionForm): void
+    + getGuardians(): List<Guardian>
+    + addGuardian(guardian: Guardian): void
+    + removeGuardian(guardian: Guardian): void
+    + getEmergencyContacts(): List<Contact>
+    + addEmergencyContact(contact: Contact): void
+    + removeEmergencyContact(contact: Contact): void
+    + getPreviousEducation(): List<EducationDetail>
+    + addEducationDetail(detail: EducationDetail): void
+    + removeEducationDetail(detail: EducationDetail): void
+    + getPhoto(): Image
+    + setPhoto(photo: Image): void
+
+}
+
+class AdmissionForm {
+    - fields: Map<string, string>
+    + AdmissionForm()
+    + addField(fieldName: string, value: string): void
+    + removeField(fieldName: string): void
+    + getFieldValue(fieldName: string): string
+    + setFieldValue(fieldName: string, value: string): void
+}
+
+class Guardian {
+    - id: int
+    - name: string
+    - relationship: string
+    + Guardian(id: int, name: string, relationship: string)
+    + getId(): int
+    + getName(): string
+    + getRelationship(): string
+}
+
+class Contact {
+    - id: int
+    - name: string
+    - phoneNumber: string
+    + Contact(id: int, name: string, phoneNumber: string)
+    + getId(): int
+    + getName(): string
+    + getPhoneNumber(): string
+}
+
+class EducationDetail {
+    - id: int
+    - institution: string
+    - degree: string
+    - year: int
+    + EducationDetail(id: int, institution: string, degree: string, year: int)
+    + getId(): int
+    + getInstitution(): string
+    + getDegree(): string
+    + getYear(): int
+}
+
+
+class Image {
+    - data: byte[]
+    + Image(data: byte[])
+    + getData(): byte[]
+}
+
+class AdmissionManager {
+    - students: List<Student>
+    + generateAdmissionForm(): AdmissionForm
+    + addStudent(student: Student): void
+    + removeStudent(student: Student): void
+    + uploadPhoto(student: Student, photo: Image): void
+}
+
+
+
+class StudentManager {
+    - students: List<Student>
+    + normalView(batch: string): List<Student>
+    + searchStudents(criteria: Map<string, string>): List<Student>
+    + advancedSearch(filters: Map<string, string>): List<Student>
+}
+
+
+
+
+
+class Exam {
+    - id: int
+    - name: string
+    - type: string
+    - grade: string
+    - marks: double
+    - date: Date
+    + Exam(id: int, name: string, type: string, grade: string, marks: double, date: Date)
+    + getId(): int
+    + getName(): string
+    + getType(): string
+    + getGrade(): string
+    + getMarks(): double
+    + getDate(): Date
+}
+
+
+
+class ExamGroup {
+    - id: int
+    - name: string
+    - exams: List<Exam>
+    + ExamGroup(id: int, name: string)
+    + getId(): int
+    + getName(): string
+    + addExam(exam: Exam): void
+    + removeExam(exam: Exam): void
+    + getExams(): List<Exam>
+}
+
+class Report {
+    - id: int
+    - exam: Exam
+    - data: string
+    + Report(id: int, exam: Exam, data: string)
+    + getId(): int
+    + getExam(): Exam
+    + getData(): string
+    + generateReport(): string
+}
+
+class ReportCenter {
+    - reports: List<Report>
+    + generateReport(exam: Exam): Report
+    + viewReport(report: Report): void
+    + viewStatisticalReport(report: Report): void
+    + viewGraphicalReport(report: Report): void
+}
+
+class EvaluationMethod {
+    - id: int
+    - name: string
+    - description: string
+    + EvaluationMethod(id: int, name: string, description: string)
+    + getId(): int
+    + getName(): string
+    + getDescription(): string
+}
+
+class GPAEvaluationMethod {
+    + calculateGPA(marks: List<double>): double
+}
+
+' class CCEEvaluationMethod {
+'     + calculateCCE(marks: List<double>): double
+' }
+
+' class CWAEvaluationMethod {
+'     + calculateCWA(marks: List<double>): double
+' }
+
+
+
+class User {
+    - id: int
+    - username: string
+    - password: string
+    - roles: List<Role>
+    + User(id: int, username: string, password: string)
+    + getId(): int
+    + getUsername(): string
+    + getPassword(): string
+    + getRoles(): List<Role>
+    + setPassword(password: string): void
+    + addRole(role: Role): void
+    + removeRole(role: Role): void  
+}
+
+class Role {
+    - id: int
+    - name: string
+    - privileges: List<Privilege>
+    + Role(id: int, name: string)
+    + getId(): int
+    + getName(): string
+    + getPrivileges(): List<Privilege>
+    + addPrivilege(privilege: Privilege): void
+    + removePrivilege(privilege: Privilege): void
+}
+
+class Privilege {
+    - id: int
+    - name: string
+    - description: string
+    + Privilege(id: int, name: string, description: string)
+    + getId(): int
+    + getName(): string
+    + getDescription(): string
+}
+
+class UserManager {
+    - users: List<User>
+    + searchUsers(criteria: Map<string, string>): List<User>
+    + viewProfile(user: User): void
+    + editPassword(user: User, newPassword: string): void
+    + setPrivileges(user: User, roles: List<Role>): void
+    + setStandardRoles(roles: List<Role>): void
+}
+
+
+
+
+class Employee {
+    - id: int
+    - name: string
+    - designation: string
+    - department: string
+    - salary: double
+    - hireDate: Date
+    - leaveBalance: int
+    - isApproved: boolean
+    + Employee(id: int, name: string, designation: string, department: string, salary: double, hireDate: Date)
+    + getId(): int
+    + getName(): string
+    + getDesignation(): string
+    + getDepartment(): string
+    + getSalary(): double
+    + getHireDate(): Date
+    + getLeaveBalance(): int
+    + isApproved(): boolean
+    + setSalary(salary: double): void
+    + requestLeave(days: int): void
+    + approveLeave(): void
+    + rejectLeave(): void
+}
+
+class Payroll {
+    - employee: Employee
+    - month: int
+    - year: int
+    - basicSalary: double
+    - allowances: double
+    - deductions: double
+    + Payroll(employee: Employee, month: int, year: int, basicSalary: double, allowances: double, deductions: double)
+    + getEmployee(): Employee
+    + getMonth(): int
+    + getYear(): int
+    + getBasicSalary(): double
+    + getAllowances(): double
+    + getDeductions(): double
+    + calculateNetSalary(): double
+}
+
+class LeaveManagement {
+    - employee: Employee
+    - leaveType: string
+    - leaveStartDate: Date
+    - leaveEndDate: Date
+    - status: string
+    + LeaveManagement(employee: Employee, leaveType: string, leaveStartDate: Date, leaveEndDate: Date)
+    + getEmployee(): Employee
+    + getLeaveType(): string
+    + getLeaveStartDate(): Date
+    + getLeaveEndDate(): Date
+    + getStatus(): string
+    + setStatus(status: string): void
+}
+
+class HRManager {
+    - employees: List<Employee>
+    - payrolls: List<Payroll>
+    - leaves: List<LeaveManagement>
+    + admitEmployee(employeeData: Map<string, string>): void
+    + updateEmployeeDetails(employeeId: int, newData: Map<string, string>): void
+    + removeEmployee(employeeId: int): void
+    + generateCustomAdmissionForm(employeeId: int): Form
+    + addPayroll(employee: Employee, month: int, year: int, basicSalary: double, allowances: double, deductions: double): void
+    + generateCustomPayrollForm(payrollId: int): Form
+    + approvePayslip(payrollId: int): void
+    + rejectPayslip(payrollId: int): void
+    + searchEmployee(criteria: Map<string, string>): List<Employee>
+    + searchPayroll(criteria: Map<string, string>): List<Payroll>
+    + searchLeave(criteria: Map<string, string>): List<LeaveManagement>
+}
+
+class Form {
+    - fields: Map<string, string>
+    + addField(fieldName: string, value: string): void
+    + removeField(fieldName: string): void
+    + getFieldValue(fieldName: string): string
+    + setFieldValue(fieldName: string, value: string): void
+}
+
+
+
+class AttendanceManager {
+    +markAttendance(AttendanceRecord record): void
+    +addRemark(AttendanceRecord record, string remark): void
+    +generateReport(ReportType type, Filter filter): AttendanceReport
+}
+
+class AttendanceRecord {
+    -date: Date
+    -student: Student
+    -status: AttendanceStatus
+    -remarks: string
+    +setStatus(AttendanceStatus status): void
+    +addRemark(string remark): void
+}
+
+
+class AttendanceReport {
+    -records: AttendanceRecord[]
+    +filterRecords(Filter filter): AttendanceRecord[]
+}
+
+class Filter {
+    -criteria: Map<string, string>
+    +addCriteria(string key, string value): void
+    +apply(List<AttendanceRecord> records): List<AttendanceRecord>
+}
+
+enum AttendanceStatus {
+    PRESENT
+    ABSENT
+    LATE
+    EXCUSED
+}
+
+' Relationships
+
+
+
+class FinanceManager {
+    +createFee(FeeDetails details): void
+    +recordExpense(Expense expense): void
+    +recordIncome(Income income): void
+    +generateReport(ReportType type): Report
+    +approvePayslip(Payslip payslip): void
+    +manageAssets(Asset asset): void
+    +manageLiabilities(Liability liability): void
+    +recordDonation(Donation donation): void
+    +assignTutorToBatch(Tutor tutor, Batch batch): void
+}
+
+class Fee {
+    -amount: Decimal
+    -dueDate: Date
+    -classification: string
+    +pay(): void
+    +updateDueDate(Date date): void
+    +classify(string classification): void
+}
+
+class FeeCollectionSystem {
+    -collectionDates: Date[]
+    +setCollectionDate(Date date): void
+    +getCollectionDates(): Date[]
+}
+
+class FeeDefaulter {
+    -studentID: string
+    -amountDue: Decimal
+    +listDefaulters(): FeeDefaulter[]
+    +calculateTotalDue(): Decimal
+}
+
+class Expense {
+    -category: string
+    -amount: Decimal
+    -date: Date
+    +record(): void
+}
+
+class Income {
+    -source: string
+    -amount: Decimal
+    -date: Date
+    +record(): void
+}
+
+class ReportGenerator {
+    +generateFeeReport(): Report
+    +generateExpenseReport(): Report
+    +generateIncomeReport(): Report
+    +generateFinancialStatement(): Report
+}
+
+class Transaction {
+    -amount: Decimal
+    -transactionDate: Date
+    -type: string
+    +execute(): void
+}
+
+class Payslip {
+    -employeeID: string
+    -amount: Decimal
+    -status: string
+    +approve(): void
+    +reject(): void
+}
+
+class Asset {
+    -name: string
+    -value: Decimal
+    -category: string
+    +addAsset(): void
+    +depreciateAsset(Decimal percentage): void
+}
+
+class Liability {
+    -name: string
+    -amount: Decimal
+    -dueDate: Date
+    +recordLiability(): void
+    +payOff(): void
+}
+
+class Donation {
+    -donorName: string
+    -amount: Decimal
+    -purpose: string
+    +recordDonation(): void
+}
+
+class Tutor {
+    -tutorID: string
+    -name: string
+    +assignToBatch(Batch batch): void
+}
+
+
+
+
+
+
+class MessagingSystem {
+    -messages: Message[]
+    +sendMessage(Message message)
+    +receiveMessage()
+}
+
+class Message {
+  - sender: User
+  - receiver: User
+  - content: string
+  - timeStamp: DateTime
+
+  + send(): void
+  + delete(): void
+}
+
+class TimeTableManager {
+    +createTimeTable(TimeTableDetails details): TimeTable
+    +editTimeTable(TimeTable timeTable, TimeTableDetails newDetails): void
+    +deleteTimeTable(TimeTable timeTable): void
+    +generateAlerts(): Alert[]
+}
+
+class TimeTable {
+    -scheduleItems: ScheduleItem[]
+    +addScheduleItem(ScheduleItem item): void
+    +removeScheduleItem(ScheduleItem item): void
+    +getScheduleItems(): ScheduleItem[]
+}
+
+class ScheduleItem {
+    -subject: Subject
+    -tutor: Tutor
+    -timeSlot: TimeSlot
+    +assignSubject(Subject subject): void
+    +assignTutor(Tutor tutor): void
+    +setTimeSlot(TimeSlot timeSlot): void
+}
+
+class Subject {
+    -name: string
+    -subjectCode: string
+    -weeklyLimit: int
+    +checkLimit(int scheduledHours): boolean
+    + Subject(name: string, code: string)
+    + getName(): string
+    + getCode(): string
+}
+
+class Tutor {
+    -name: string
+    -employeeID: string
+    -subjectLimits: Map<Subject, int>
+    +assignLimit(Subject subject, int limit): void
+    +checkLimit(Subject subject, int scheduledHours): boolean
+}
+
+class TimeSlot {
+    -startTime: Time
+    -endTime: Time
+    -daysOfWeek: DayOfWeek[]
+    +setTime(Time startTime, Time endTime): void
+    +setDays(DayOfWeek[] days): void
+}
+
+class Alert {
+    -message: string
+    -severity: Severity
+    +display(): void
+}
+
+class DragAndDropInterface {
+    +drag(scheduleItem: ScheduleItem): void
+    +drop(targetTimeSlot: TimeSlot): void
+    +onDragStart(scheduleItem: ScheduleItem): void
+    +onDropComplete(scheduleItem: ScheduleItem, targetTimeSlot: TimeSlot): void
+}
+
+enum Severity {
+    INFO
+    WARNING
+    ERROR
+}
+
+enum DayOfWeek {
+    MONDAY
+    TUESDAY
+    WEDNESDAY
+    THURSDAY
+    FRIDAY
+    SATURDAY
+    SUNDAY
+}
+
+' Relationships
+
+
+
+class NewsManager {
+    +createNews(NewsArticle article): void
+    +editNews(NewsArticle article): void
+    +deleteNews(NewsArticle article): void
+    +searchNews(string keywords): NewsArticle[]
+    +viewAllNews(): NewsArticle[]
+}
+
+class NewsArticle {
+    -title: string
+    -content: string
+    -publishedDate: Date
+    -author: User
+    -comments: Comment[]
+    +publish(): void
+    +addComment(Comment comment): void
+    +deleteComment(Comment comment): void
+    +editContent(string newContent): void
+}
+
+class Comment {
+    -text: string
+    -commenter: User
+    -postedDate: Date
+    +post(): void
+    +delete(): void
+}
+
+class RichTextEditor {
+    +formatText(string text): string
+    +insertImage(string imagePath): string
+    +createLink(string url, string displayText): string
+}
+
+class SearchBar {
+    -searchQuery: string
+    +search(string query): NewsArticle[]
+}
+
+class User {
+    -userID: string
+    -name: string
+    -role: Role
+    +commentOnNews(NewsArticle article, string text): void
+}
+
+enum Role {
+    STUDENT
+    TEACHER
+    ADMINISTRATOR
+}
+
+' Relationships
+
+Dashboard "1" -- "0..*" AdmissionFormField
+Dashboard "1" -- "0..1" SMSConfiguration
+Dashboard "1" -- "0..*" Student
+Dashboard "1" -- "0..*" Subject
+Dashboard "1" -- "0..*" User
+Dashboard "1" -- "1" EducationInstitute
+
+Student "1" -- "0..*" Guardian
+Student "1" -- "0..*" Contact
+Student "1" -- "0..*" EducationDetail
+Student "1" -- "1" Image
+Student "1" -- "0..*" MessagingSystem
+
+AdmissionManager "1" -- "0..*" Student
+AdmissionManager "1" -- "1" admissionForm
+admissionForm "1" -- "0..*" Student
+
+
+StudentManager "1" -- "0..*" Student
+
+ExamGroup "1" -- "0..*" Exam
+Report "1" -- "0..1" Exam
+ReportCenter "1" -- "0..*" Report
+
+ExamManager "1" -- "*" Exam : manages >
+Exam "1" -- "1" ExamReport : has >
+ExamReport "1" -- "*" EvaluationMethodResult : includes >
+
+User "1" -- "0..*" MessagingSystem
+User "1" -- "0..*" Role
+Role "1" -- "0..*" Privilege
+UserManager "1" -- "0..*" User
+
+
+Employee "1" -- "0..*" Payroll
+Employee "1" -- "0..*" LeaveManagement
+HRManager "1" -- "0..*" Employee
+HRManager "1" -- "0..*" Payroll
+
+
+
+AttendanceManager "1" -- "*" AttendanceRecord
+AttendanceRecord "1" -- "1" Student
+AttendanceManager "1" -- "1" AttendanceReport
+AttendanceReport "*" -- "1" Filter
+AttendanceRecord "1" -- "1" AttendanceStatus
+
+
+
+FinanceManager "1" -- "*" Fee
+FinanceManager "1" -- "*" Expense
+FinanceManager "1" -- "*" Income
+FinanceManager "1" -- "*" ReportGenerator
+FinanceManager "1" -- "*" Transaction
+FinanceManager "1" -- "*" Payslip
+FinanceManager "1" -- "*" Asset
+FinanceManager "1" -- "*" Liability
+FinanceManager "1" -- "*" Donation
+FinanceManager "1" -- "*" Tutor
+FinanceManager "1" -- "1" FeeCollectionSystem
+
+
+TimeTableManager "1" -- "*" TimeTable
+TimeTable "1" -- "*" ScheduleItem
+ScheduleItem "*" -- "1" Subject
+ScheduleItem "*" -- "1" Tutor
+ScheduleItem "*" -- "1" TimeSlot
+TimeTableManager "1" -- "*" Alert
+DragAndDropInterface "1" -- "1" ScheduleItem
+
+
+
+
+NewsManager "1" -- "*" NewsArticle
+NewsArticle "1" -- "*" Comment
+NewsArticle "*" -- "1" User: "author"
+Comment "1" -- "1" User: "commenter"
+SearchBar "1" -- "1" NewsManager
+
+Message "0..*" -- "1" MessagingSystem
+
+
+
+
+
+
+@enduml
+
+
+
+
+
+ 

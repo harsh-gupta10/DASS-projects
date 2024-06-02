@@ -1,0 +1,103 @@
+@startuml IMS_Sequence_Diagram
+
+actor User
+control Dashboard
+control AdmissionManager
+control UserManager
+control NewsManager
+entity NewsItem
+entity AdmissionForm
+
+== Display News on Dashboard ==
+User -> Dashboard: requestNews()
+Dashboard -> NewsManager: getLatestNews()
+NewsManager -> NewsItem: fetchNewsItems()
+NewsItem --> NewsManager: NewsItems[]
+NewsManager --> Dashboard: NewsItems[]
+Dashboard --> User: displayNews(NewsItems)
+
+== User Management ==
+User -> UserManager: createNewUser(userData)
+UserManager -> User: userCreated()
+User -> UserManager: assignRole(user, role)
+UserManager -> User: roleAssigned()
+User -> UserManager: setPrivileges(user, privileges)
+UserManager -> User: privilegesSet()
+
+== Update Settings on Dashboard ==
+User -> Dashboard: updateSettings()
+Dashboard -> User: Settings updated
+
+== Initiate Admission Process ==
+User -> AdmissionManager: initiateAdmissionProcess()
+AdmissionManager -> AdmissionForm: generateAdmissionForm()
+AdmissionForm --> AdmissionManager: AdmissionForm
+AdmissionManager -> User: admissionFormGenerated()
+
+== Manage News ==
+User -> NewsManager: createNews(newsData)
+NewsManager -> NewsItem: newNewsItem(newsData)
+NewsItem --> NewsManager: NewsItemCreated
+NewsManager --> User: NewsCreated()
+
+User -> NewsManager: editNews(newsId, updatedNewsData)
+NewsManager -> NewsItem: updateNewsItem(newsId, updatedNewsData)
+NewsItem --> NewsManager: NewsUpdated()
+NewsManager --> User: NewsEdited()
+
+== Admission Process ==
+User -> AdmissionManager: submitAdmissionForm(admissionForm)
+AdmissionManager -> AdmissionForm: processAdmissionForm(admissionForm)
+AdmissionForm --> AdmissionManager: AdmissionData
+AdmissionManager -> AdmissionManager: validateAdmissionData(AdmissionData)
+AdmissionManager -> AdmissionManager: enrollStudent(AdmissionData)
+AdmissionManager -> User: admissionCompleted()
+
+== User Profile Management ==
+User -> UserManager: viewProfile(userId)
+UserManager -> User: userProfileDisplayed()
+
+User -> UserManager: editProfile(userId, newData)
+UserManager -> User: profileUpdated()
+
+== Fee Management ==
+User -> Dashboard: manageFees()
+Dashboard -> User: Fee management interface displayed
+User -> Dashboard: payFee(studentId, amount)
+Dashboard -> AdmissionManager: getStudentInfo(studentId)
+AdmissionManager -> User: studentInfo
+Dashboard -> User: feePaymentSuccessful()
+
+== Attendance Management ==
+User -> Dashboard: markAttendance()
+Dashboard -> AttendanceManager: markAttendance(record)
+AttendanceManager -> AttendanceRecord: updateStatus()
+AttendanceManager -> Dashboard: attendanceRecordUpdated()
+
+User -> Dashboard: addAttendanceRemark(record, remark)
+Dashboard -> AttendanceManager: addRemark(record, remark)
+AttendanceManager -> AttendanceRecord: addRemark(remark)
+AttendanceManager -> Dashboard: attendanceRemarkAdded()
+
+== Exam Management ==
+User -> Dashboard: manageExams()
+Dashboard -> User: Exam management interface displayed
+User -> Dashboard: scheduleExam(examDetails)
+Dashboard -> ExamScheduler: createExam(examDetails)
+ExamScheduler -> Dashboard: examCreated()
+
+== Generate Reports ==
+User -> Dashboard: generateReports()
+Dashboard -> ReportGenerator: generateReports()
+ReportGenerator -> User: reportsGenerated()
+
+== Leave Management ==
+User -> Dashboard: manageLeave()
+Dashboard -> LeaveManager: displayLeaveManagementInterface()
+LeaveManager -> User: Leave management interface displayed
+User -> LeaveManager: applyLeave(leaveDetails)
+LeaveManager -> HRManager: submitLeaveApplication(leaveDetails)
+HRManager -> LeaveManager: leaveApplicationProcessed()
+LeaveManager -> User: leaveApplicationSubmitted()
+
+@enduml
